@@ -1,5 +1,7 @@
 # web-flux
-> 💜 kotlin / web-flux / mongo-db
+kotlin / web-flux / mongo-db
+
+무한삽질기록
 
 
 참고
