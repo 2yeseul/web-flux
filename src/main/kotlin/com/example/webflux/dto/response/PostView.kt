@@ -4,7 +4,7 @@ import com.example.webflux.domain.Post
 import java.time.LocalDateTime
 
 data class PostView(
-    var id: String?,
+    val id: String,
     val userId: String,
     val title: String,
     val content: String?,

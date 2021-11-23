@@ -1,5 +1,6 @@
 package com.example.webflux.router
 
+import com.example.webflux.domain.Post
 import com.example.webflux.dto.request.PostRequest
 import com.example.webflux.dto.response.PostView
 import com.example.webflux.service.PostService
@@ -28,7 +29,7 @@ class PostRouter(
         router {
             listOf(
                 GET("/"),
-                GET("/{id}"),
+                GET("/{id}", postHandler::getById),
                 POST("/", postHandler::save)
             )
         }
@@ -40,15 +41,18 @@ class PostHandler(
     private val postService: PostService
 ) {
 
-    fun save(@RequestBody request: ServerRequest): Mono<ServerResponse> = ok()
+    fun save(request: ServerRequest): Mono<ServerResponse> {
+        val postMono = request.bodyToMono(PostRequest::class.java)
+
+        return postMono.flatMap {
+            it -> ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(it)
+        }
+    }
+
+    fun getById(request: ServerRequest) = ok()
         .contentType(MediaType.APPLICATION_JSON)
-        .body(request.bodyToMono(PostRequest::class.java)
-            .switchIfEmpty(Mono.empty())
-            .filter(Objects::nonNull)
-            .map { post ->
-                Mono.fromCallable {
-                    postService.createPost(post)
-                }.then(Mono.just(post))
-            }
-        ).switchIfEmpty(notFound().build())
+        .body<Post>(Mono.justOrEmpty(postService.getById(request.pathVariable("id"))))
+        .switchIfEmpty(notFound().build())
 }

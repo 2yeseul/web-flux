@@ -2,15 +2,16 @@ package com.example.webflux.dto.request
 
 import com.example.webflux.domain.Post
 import java.time.LocalDateTime
+import java.util.*
 
-class PostRequest(
+data class PostRequest(
     val userId: String,
     val title: String,
     val content: String
 ) {
     companion object {
         fun from(postRequest: PostRequest) = Post(
-            id = null,
+            // id = UUID.randomUUID().toString(),
             userId = postRequest.userId,
             title = postRequest.title,
             content = postRequest.content,

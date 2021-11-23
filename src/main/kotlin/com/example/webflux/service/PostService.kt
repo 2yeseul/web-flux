@@ -3,6 +3,7 @@ package com.example.webflux.service
 import com.example.webflux.domain.Post
 import com.example.webflux.domain.PostRepository
 import com.example.webflux.dto.request.PostRequest
+import com.example.webflux.dto.response.PostView
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -15,9 +16,11 @@ class PostService(
 ) {
     private val log: Logger = LoggerFactory.getLogger(PostService::class.java)
 
-    fun createPost(request: PostRequest): Mono<Post> = postRepository.save(
-        PostRequest.from(request)
-    )
+    fun createPost(request: PostRequest): Mono<Post> {
+        val post = PostRequest.from(request)
+        log.info("post id is ${post.id}")
+        return postRepository.save(post)
+    }
 
     fun findAll(): Flux<Post> = postRepository.findAll()
 

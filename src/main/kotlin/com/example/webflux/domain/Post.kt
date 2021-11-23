@@ -3,11 +3,12 @@ package com.example.webflux.domain
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
+import java.util.*
 
-@Document
+@Document(collection = "post")
 data class Post(
     @Id
-    var id: String?,
+    val id: String = UUID.randomUUID().toString(),
     val userId: String,
     val title: String,
     val content: String?,
