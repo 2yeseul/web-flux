@@ -17,14 +17,16 @@ class PostService(
     private val log: Logger = LoggerFactory.getLogger(PostService::class.java)
 
     fun createPost(request: PostRequest): Mono<Post> {
-        val post = PostRequest.from(request)
-        log.info("post id is ${post.id}")
+        val post = Post.of(request)
         return postRepository.save(post)
     }
 
     fun findAll(): Flux<Post> = postRepository.findAll()
 
     fun getById(id: String): Mono<Post> = postRepository.findById(id)
+        .also {
+            log.info("id is $id")
+        }
         .switchIfEmpty(
             Mono.error(
                 RuntimeException("id $id is not found")

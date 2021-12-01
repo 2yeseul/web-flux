@@ -8,14 +8,4 @@ data class PostRequest(
     val userId: String,
     val title: String,
     val content: String
-) {
-    companion object {
-        fun from(postRequest: PostRequest) = Post(
-            userId = postRequest.userId,
-            title = postRequest.title,
-            content = postRequest.content,
-            createdAt = LocalDateTime.now(),
-            updatedAt = null
-        )
-    }
-}
+)

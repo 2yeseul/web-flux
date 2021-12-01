@@ -30,8 +30,8 @@ class PostRouter(
     fun routers() = nest(path("/posts"),
         router {
             listOf(
-                //GET("/"),
-                //GET("/{id}", postHandler::getById),
+                GET("/"),
+                GET("/{id}", postHandler::getById),
                 POST("", accept(MediaType.APPLICATION_JSON), postHandler::save)
             )
         }
@@ -41,19 +41,16 @@ class PostRouter(
 @Component
 class PostHandler(
     private val postService: PostService,
-    private val postRepository: PostRepository,
 ) {
     private val log: Logger = LoggerFactory.getLogger(PostHandler::class.java)
 
     fun save(request: ServerRequest): Mono<ServerResponse> =
         request.bodyToMono(PostRequest::class.java)
-            .map { Post.of(it) }
-            .flatMap { postRepository.save(it) }
+            .flatMap { postService.createPost(it) }
             .flatMap { ok().bodyValue(PostView.of(it)) }
 
-    fun getById(request: ServerRequest) = ok()
-        .contentType(MediaType.APPLICATION_JSON)
-        .body<Post>(Mono.justOrEmpty(postService.getById(request.pathVariable("id"))))
-        .switchIfEmpty(notFound().build())
-
+    fun getById(request: ServerRequest): Mono<ServerResponse> {
+        val post = postService.getById(request.pathVariable("id"))
+        return post.flatMap { ok().bodyValue(PostView.of(it)) }
+    }
 }
