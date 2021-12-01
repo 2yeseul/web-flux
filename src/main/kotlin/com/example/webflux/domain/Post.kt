@@ -1,5 +1,7 @@
 package com.example.webflux.domain
 
+import com.example.webflux.dto.request.PostRequest
+import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
@@ -14,4 +16,14 @@ data class Post(
     val content: String?,
     var createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime?
-)
+) {
+    companion object {
+        fun of(postRequest: PostRequest) = Post(
+            userId = postRequest.userId,
+            title = postRequest.title,
+            content = postRequest.content,
+            createdAt = LocalDateTime.now(),
+            updatedAt = null
+        )
+    }
+}

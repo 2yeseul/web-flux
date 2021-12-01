@@ -11,7 +11,6 @@ data class PostRequest(
 ) {
     companion object {
         fun from(postRequest: PostRequest) = Post(
-            // id = UUID.randomUUID().toString(),
             userId = postRequest.userId,
             title = postRequest.title,
             content = postRequest.content,
